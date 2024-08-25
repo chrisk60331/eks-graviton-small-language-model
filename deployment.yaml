@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keyword-extraction-deployment
+spec:
+  replicas: 2  # Start with one replica; Karpenter will scale nodes if needed
+  selector:
+    matchLabels:
+      app: keyword-extraction
+  template:
+    metadata:
+      labels:
+        app: keyword-extraction
+    spec:
+      nodeSelector:
+        kubernetes.io/arch: arm64
+      containers:
+      - name: keyword-extraction
+        ports:
+          - containerPort: 8080
+        image: 706146613458.dkr.ecr.us-west-1.amazonaws.com/keyword-extraction-app:latest
+        resources:
+          requests:
+            cpu: "500m"
+            memory: "1Gi"
+          limits:
+            cpu: "1"
+            memory: "2Gi"

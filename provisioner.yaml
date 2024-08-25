@@ -1,0 +1,22 @@
+apiVersion: karpenter.sh/v1alpha5
+kind: Provisioner
+metadata:
+  name: graviton-provisioner
+spec:
+  limits:
+    resources:
+      cpu: 1000
+      memory: 4000Gi
+  provider:
+    instanceProfile: KarpenterNodeInstanceProfile
+  requirements:
+    - key: "node.kubernetes.io/instance-type"
+      operator: In
+      values: ["m6g.large", "c7g.large"]  # Replace with relevant Graviton4 instances
+    - key: "topology.kubernetes.io/zone"
+      operator: In
+      values: ["us-west-1a", "us-west-1b", "us-west-1c"]
+    - key: "kubernetes.io/arch"
+      operator: In
+      values: ["arm64"]  # Ensure ARM64 architecture
+  ttlSecondsAfterEmpty: 30
